@@ -11,6 +11,7 @@ export * from './TransferVet';
 export * from './TransferXlm';
 export * from './TransferQuorum';
 export * from './AccountPassword';
+export * from './TransferPolkadot';
 export * from './TransferXrp';
 export * from './TransferTrxOffchain';
 export * from './TransferTron';

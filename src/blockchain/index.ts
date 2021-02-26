@@ -8,3 +8,4 @@ export * from './ethereum';
 export * from './bcash';
 export * from './scrypta';
 export * from './tron';
+export * from './polkadot';

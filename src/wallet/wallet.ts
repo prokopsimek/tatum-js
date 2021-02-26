@@ -11,6 +11,7 @@ import {Keypair} from 'stellar-sdk';
 import {
     BCH_DERIVATION_PATH,
     BTC_DERIVATION_PATH,
+    DOT_DERIVATION_PATH,
     ETH_DERIVATION_PATH,
     LTC_DERIVATION_PATH,
     LTC_NETWORK,
@@ -114,6 +115,31 @@ export const generateBtcWallet = async (testnet: boolean, mnem: string): Promise
     return {
         mnemonic: mnem,
         xpub: hdwallet.derive(testnet ? TESTNET_DERIVATION_PATH : BTC_DERIVATION_PATH).toJSON().xpub
+    };
+};
+/**
+ * Generate PolkaDot wallet
+ * @param testnet testnet or mainnet version of address
+ * @param mnem mnemonic seed to use
+ * @returns wallet
+ */
+export const generatePolkaWallet = async (testnet: boolean, mnem: string): Promise<Wallet> => {
+    // return {
+    //     xpub: Buffer.from(hdLedger(mnem, DOT_DERIVATION_PATH).publicKey).toString('hex'),
+    //     mnemonic: mnem
+    // };
+    // // const keyring = new Keyring({type: 'sr25519', ss58Format: testnet ? WESTEND_SS58_FORMAT : POLKADOT_SS58_FORMAT});
+    // // await cryptoWaitReady();
+    // // const pair = keyring.addFromUri(mnem + DOT_DERIVATION_URI, {}, 'sr25519');
+    // // return {
+    // //     xpub: Buffer.from(pair.publicKey).toString('hex'),
+    // //     mnemonic: mnem
+    // // }
+    const hdwallet = ethHdKey.fromMasterSeed(await mnemonicToSeed(mnem));
+    const derivePath = hdwallet.derivePath(DOT_DERIVATION_PATH);
+    return {
+        xpub: derivePath.publicExtendedKey().toString(),
+        mnemonic: mnem
     };
 };
 

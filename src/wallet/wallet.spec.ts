@@ -4,7 +4,9 @@ import {
     generateBtcWallet,
     generateEthWallet,
     generateLtcWallet,
-    generateNeoWallet, generateTronWallet,
+    generateNeoWallet,
+    generatePolkaWallet,
+    generateTronWallet,
     generateVetWallet,
     generateXlmWallet,
     generateXrpWallet
@@ -16,6 +18,12 @@ describe('Address tests', () => {
         const wallet = await generateBtcWallet(false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten');
         expect(wallet.mnemonic).toBe('quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten');
         expect(wallet.xpub).toBe('xpub6DtevPxud8AJUCqddtVqpqxAJvjFrYYvtt4co2kZF7ifPW3d5FJ3B9i5x7xL4CZirb2eNDEVqCtBgiGZR6Kkee5RdHsDoJVbtxi946axjXJ');
+    });
+
+    it('should generate wallet for DOT mainnet', async () => {
+        const wallet = await generatePolkaWallet(false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten');
+        expect(wallet.mnemonic).toBe('quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten');
+        expect(wallet.xpub).toBe('xpub6E2KqGvWeAswKaAbnwL54tnhTJre3g7HJBA5otkZLkuMR8vVbFfF72qmfPqEbbnWsAQ5r69m3JSggkHVtyaCYact4wQR4P2U4oHkdkPgiu6');
     });
 
     it('should generate wallet for BTC testnet', async () => {

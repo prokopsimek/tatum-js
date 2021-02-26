@@ -1,3 +1,4 @@
+import {deriveAddress, POLKADOT_SS58_FORMAT, WESTEND_SS58_FORMAT} from '@substrate/txwrapper';
 import {fromBase58, fromPublicKey, fromSeed} from 'bip32';
 import {mnemonicToSeed} from 'bip39';
 import {HDNode, Mnemonic} from 'bitbox-sdk';
@@ -7,6 +8,8 @@ import ethWallet, {hdkey as ethHdKey} from 'ethereumjs-wallet';
 import {
     BCH_DERIVATION_PATH,
     BTC_DERIVATION_PATH,
+    DOT_DERIVATION_PATH,
+    DOT_DERIVATION_URI,
     ETH_DERIVATION_PATH,
     LTC_DERIVATION_PATH,
     LTC_NETWORK,
@@ -87,6 +90,19 @@ const generateEthAddress = (testnet: boolean, xpub: string, i: number) => {
 };
 
 /**
+ * Generate Polkadot
+ * @param testnet testnet or mainnet version of address
+ * @param xpub extended public key to generate address from
+ * @param i derivation index of address to generate. Up to 2^31 addresses can be generated.
+ * @returns blockchain address
+ */
+const generatePolkadotAddress = (testnet: boolean, xpub: string, i: number) => {
+    const w = ethHdKey.fromExtendedKey(xpub);
+    const wallet = w.deriveChild(i).getWallet();
+    return deriveAddress(wallet.getPublicKey().slice(0, 32), testnet ? WESTEND_SS58_FORMAT : POLKADOT_SS58_FORMAT);
+};
+
+/**
  * Generate VeChain address
  * @param testnet testnet or mainnet version of address
  * @param xpub extended public key to generate address from
@@ -125,6 +141,18 @@ const generateBtcPrivateKey = async (testnet: boolean, mnemonic: string, i: numb
         .derivePath(testnet ? TESTNET_DERIVATION_PATH : BTC_DERIVATION_PATH)
         .derive(i)
         .toWIF();
+};
+/**
+ * Generate Polka private key from mnemonic seed
+ * @param testnet testnet or mainnet version of address
+ * @param mnemonic mnemonic to generate private key from
+ * @param i derivation index of private key to generate.
+ * @returns blockchain private key to the address
+ */
+const generatePolkadotPrivateKey = async (testnet: boolean, mnemonic: string, i: number) => {
+    const hdwallet = ethHdKey.fromMasterSeed(await mnemonicToSeed(mnemonic));
+    const derivePath = hdwallet.derivePath(`${DOT_DERIVATION_PATH}/${i}`);
+    return derivePath.getWallet().getPrivateKeyString();
 };
 
 /**
@@ -249,6 +277,17 @@ const convertEthPrivateKey = (testnet: boolean, privkey: string) => {
 };
 
 /**
+ * Convert Polka Private Key to Address
+ * @param testnet testnet or mainnet version of address
+ * @param privkey private key to use
+ * @returns blockchain address
+ */
+const convertPolkadotPrivateKey = (testnet: boolean, privkey: string) => {
+    const wallet = ethWallet.fromPrivateKey(Buffer.from(privkey.replace('0x', ''), 'hex'));
+    return deriveAddress(wallet.getPublicKey().slice(0, 32), testnet ? WESTEND_SS58_FORMAT : POLKADOT_SS58_FORMAT);
+};
+
+/**
  * Generate address
  * @param currency type of blockchain
  * @param testnet testnet or mainnet version of address
@@ -265,6 +304,8 @@ export const generateAddressFromXPub = (currency: Currency, testnet: boolean, xp
             return generateTronAddress(xpub, i);
         case Currency.LTC:
             return generateLtcAddress(testnet, xpub, i);
+        case Currency.DOT:
+            return generatePolkadotAddress(testnet, xpub, i);
         case Currency.BCH:
             return generateBchAddress(testnet, xpub, i);
         case Currency.USDT:
@@ -309,6 +350,8 @@ export const generatePrivateKeyFromMnemonic = (currency: Currency, testnet: bool
             return generateLtcPrivateKey(testnet, mnemonic, i);
         case Currency.BCH:
             return generateBchPrivateKey(testnet, mnemonic, i);
+        case Currency.DOT:
+            return generatePolkadotPrivateKey(testnet, mnemonic, i);
         case Currency.TRON:
         case Currency.USDT_TRON:
             return generateTronPrivateKey(mnemonic, i);
@@ -353,6 +396,8 @@ export const generateAddressFromPrivatekey = (currency: Currency, testnet: boole
             return convertLyraPrivateKey(testnet, privateKey);
         case Currency.ETH:
             return convertEthPrivateKey(testnet, privateKey);
+        case Currency.DOT:
+            return convertPolkadotPrivateKey(testnet, privateKey);
         default:
             throw new Error('Unsupported blockchain.');
     }

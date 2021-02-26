@@ -7,6 +7,7 @@ export enum Currency {
     XRP = 'XRP',
     XLM = 'XLM',
     VET = 'VET',
+    DOT = 'DOT',
     NEO = 'NEO',
     BNB = 'BNB',
     USDT = 'USDT',

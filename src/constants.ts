@@ -6,6 +6,8 @@ export const TEST_VET_URL = 'https://sync-testnet.vechain.org/';
 export const VET_URL = 'https://sync-mainnet.vechain.org/';
 
 export const ETH_DERIVATION_PATH = 'm/44\'/60\'/0\'/0';
+export const DOT_DERIVATION_PATH = 'm/44\'/354\'/0\'/0';
+export const DOT_DERIVATION_URI = '//44//354//0/0';
 export const VET_DERIVATION_PATH = 'm/44\'/818\'/0\'/0';
 export const BTC_DERIVATION_PATH = 'm/44\'/0\'/0\'/0';
 export const TRON_DERIVATION_PATH = 'm/44\'/195\'/0\'/0';

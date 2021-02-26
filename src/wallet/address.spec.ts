@@ -1,8 +1,24 @@
+import {hexToU8a, isHex} from '@polkadot/util';
+import {decodeAddress, encodeAddress} from '@polkadot/util-crypto';
 import {Currency} from '../model';
 import {generateAddressFromPrivatekey, generateAddressFromXPub, generatePrivateKeyFromMnemonic} from './address';
 import {generateTronWallet} from './wallet';
 // tslint:disable-next-line:no-var-requires
 const TronWeb = require('tronweb');
+
+const isValidAddressPolkadotAddress = (addr: string) => {
+    try {
+        encodeAddress(
+            isHex(addr)
+                ? hexToU8a(addr)
+                : decodeAddress(addr)
+        );
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
 
 describe('Address tests', () => {
 
@@ -61,6 +77,18 @@ describe('Address tests', () => {
         expect(address).toBe('0x8cb76aed9c5e336ef961265c6079c14e9cd3d2ea');
     });
 
+    it('should generate address 1 for DOT testnet', () => {
+        const address = generateAddressFromXPub(Currency.DOT, true, 'xpub6E2KqGvWeAswKaAbnwL54tnhTJre3g7HJBA5otkZLkuMR8vVbFfF72qmfPqEbbnWsAQ5r69m3JSggkHVtyaCYact4wQR4P2U4oHkdkPgiu6', 1);
+        expect(isValidAddressPolkadotAddress(address)).toBeTruthy();
+        expect(address).toBe('5FCJGwcrmGNKV6kg49XtqbLZHZ88gToGeM2jwrK7CsrSBPAB');
+    });
+
+    it('should generate address 1 for DOT mainnet', async () => {
+        const address = await generateAddressFromXPub(Currency.DOT, false, 'xpub6E2KqGvWeAswKaAbnwL54tnhTJre3g7HJBA5otkZLkuMR8vVbFfF72qmfPqEbbnWsAQ5r69m3JSggkHVtyaCYact4wQR4P2U4oHkdkPgiu6', 1);
+        expect(isValidAddressPolkadotAddress(address)).toBeTruthy();
+        expect(address).toBe('148bRGsvd3dnvdmC1natykAi9B7nNmMQiqmE79JTkxsxMbZx');
+    });
+
     it('should generate private key 1 for BTC mainnet', async () => {
         const privateKey = await generatePrivateKeyFromMnemonic(Currency.BTC, false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
         expect(privateKey).toBe('KwrYonf8pFfyQR87NTn124Ep9zoJsZMBCoVUi7mjMc1eTHDyLyBN');
@@ -86,6 +114,35 @@ describe('Address tests', () => {
     it('should generate private key 1 for LTC mainnet', async () => {
         const privateKey = await generatePrivateKeyFromMnemonic(Currency.LTC, false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
         expect(privateKey).toBe('T63MUovVt5GN5rmfwYMr4M6YqFmisjbrZrfZYZ53qWmCwiP6xCHa');
+    });
+
+    it('should generate private key 1 for DOT mainnet', async () => {
+        const privateKey = await generatePrivateKeyFromMnemonic(Currency.DOT, false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
+        expect(privateKey).toBe('0x52c38558e69f24e905324426311714a18e2d21243cf186720448873ceb1e4455');
+    });
+
+    it('should generate private key 1 for DOT testnet', async () => {
+        const privateKey = await generatePrivateKeyFromMnemonic(Currency.DOT, true, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
+        expect(privateKey).toBe('0x52c38558e69f24e905324426311714a18e2d21243cf186720448873ceb1e4455');
+    });
+
+    it('should generate address from private key 1 for DOT mainnet', async () => {
+        const privateKey = await generatePrivateKeyFromMnemonic(Currency.DOT, false, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
+        expect(privateKey).toBe('0x52c38558e69f24e905324426311714a18e2d21243cf186720448873ceb1e4455');
+        const address = await generateAddressFromPrivatekey(Currency.DOT, false, privateKey);
+        expect(address).toBe('148bRGsvd3dnvdmC1natykAi9B7nNmMQiqmE79JTkxsxMbZx');
+    });
+
+    it('should generate private key 1 for DOT testnet', async () => {
+        const privateKey = await generatePrivateKeyFromMnemonic(Currency.DOT, true, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
+        expect(privateKey).toBe('0x52c38558e69f24e905324426311714a18e2d21243cf186720448873ceb1e4455');
+    });
+
+    it('should generate address from private key 1 for DOT testnet', async () => {
+        const privateKey = await generatePrivateKeyFromMnemonic(Currency.DOT, true, 'quantum tobacco key they maid mean crime youth chief jungle mind design broken tilt bus shoulder leaf good forward erupt split divert bread kitten', 1);
+        expect(privateKey).toBe('0x52c38558e69f24e905324426311714a18e2d21243cf186720448873ceb1e4455');
+        const address = await generateAddressFromPrivatekey(Currency.DOT, true, privateKey);
+        expect(address).toBe('5FCJGwcrmGNKV6kg49XtqbLZHZ88gToGeM2jwrK7CsrSBPAB');
     });
 
     it('should generate private key 1 for LTC testnet', async () => {

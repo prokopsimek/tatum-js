@@ -62,9 +62,9 @@ type Argument = {
 type Transaction = {
     code: string
     args: Argument[]
-    proposer: AccountAuthorizer
-    authorizations: AccountAuthorizer[]
-    payer: AccountAuthorizer
+    proposer: any
+    authorizations: any[]
+    payer: any
 }
 
 type TransactionResult = {
@@ -98,12 +98,20 @@ export const getFlowSigner = (
     pk: string,
     address: string,
     keyId = 0,
-): AccountAuthorizer => {
-    return sdk.authorization(fcl.sansPrefix(address), (data: any) => ({
-        addr: fcl.withPrefix(address),
-        keyId,
-        signature: sign(pk, Buffer.from(data.message, 'hex')),
-    }), 0);
+) => {
+
+    return {
+        tempId: `${address}-${keyId}`,
+        addr: fcl.sansPrefix(address),
+        keyId: Number(keyId),
+        signingFunction: async (data: any) => {
+            return {
+                addr: fcl.withPrefix(address),
+                keyId: Number(keyId),
+                signature: sign(pk, Buffer.from(data.message, 'hex')),
+            };
+        }
+    };
 };
 
 const sendTransaction = async (testnet: boolean, {

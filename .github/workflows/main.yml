@@ -27,9 +27,13 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
-
+       
     - name: Install dependencies 📦
-      run: yarn install --frozen-lockfile
-
+      run: |
+        cd /home/runner/work/tatum-js/tatum-js
+        yarn install
+        
     - name: Build 🔧
-      run: yarn build
+      run: |
+        cd /home/runner/work/tatum-js/tatum-js
+        yarn build

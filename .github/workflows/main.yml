@@ -29,11 +29,7 @@ jobs:
         node-version: '14'
        
     - name: Install dependencies 📦
-      run: |
-        cd tatum-js/tatum-js
-        yarn install
+      run: yarn install
         
     - name: Build 🔧
-      run: |
-        cd tatum-js/tatum-js
-        yarn build
+      run: yarn build

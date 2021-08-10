@@ -30,10 +30,10 @@ jobs:
        
     - name: Install dependencies 📦
       run: |
-        cd /home/runner/work/tatum-js/tatum-js
+        cd tatum-js/tatum-js
         yarn install
         
     - name: Build 🔧
       run: |
-        cd /home/runner/work/tatum-js/tatum-js
+        cd tatum-js/tatum-js
         yarn build
